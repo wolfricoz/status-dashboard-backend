@@ -5,6 +5,7 @@ namespace App\MessageHandler;
 use App\Entity\ServiceStatus;
 use App\Enum\ServiceStatusType;
 use App\Message\GetServiceStatus;
+use App\Service\BaseApi;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -33,16 +34,16 @@ final class GetServiceStatusHandler
 		foreach ($services as $service) {
 			/** @var ServiceStatus $service */
 
-			$services = [
-					'banwatch' => 'App\Service\BanwatchApi',
-					'ageverifier' => 'App\Service\AgeVerifierApi',
-			];
-			if (!array_key_exists($service->getService(), $services)) {
-				continue;
-			}
+//			$services = [
+//					'banwatch' => 'App\Service\BanwatchApi',
+//					'ageverifier' => 'App\Service\AgeVerifierApi',
+//			];
+
 			$this->logger->info('Checking service: ' . $service->getService());
 			echo "Checking service: " . $service->getService() . "\n";
-			$service_api = new $services[$service->getService()]();
+			$service_api = new BaseApi($this->entityManager, $this->logger, $service->getService());
+			$this->logger->info('created base api');
+
 			$result = $service_api->send_request('/ping', 'POST');
 			switch($result['status']) {
 				case 'alive':
@@ -58,6 +59,8 @@ final class GetServiceStatusHandler
 					$service->setStatus(ServiceStatusType::UNKNOWN);
 					break;
 			}
+			$this->logger->info('Status Retrieved');
+
 			if (isset($result['high'])) {
 				$service->setHighTasks($result['high']);
 			}
@@ -67,8 +70,12 @@ final class GetServiceStatusHandler
 			if (isset($result['low'])) {
 				$service->setLowTasks($result['low']);
 			}
+			$this->logger->info('Tasks Retrieved');
 			$this->entityManager->persist($service);
 			$this->entityManager->flush();
+			$this->logger->info('Service status updated: ' . $service->getService());
+
 		}
+		echo 'Service status check completed.' . PHP_EOL;
 	}
 }
