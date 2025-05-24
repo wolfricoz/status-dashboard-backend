@@ -29,6 +29,12 @@ class ServiceStatus
 	#[ORM\Column]
 	private ?int $low_tasks = 0;
 
+	#[ORM\Column]
+	private ?string $url = "";
+
+	#[ORM\Column]
+	private ?string $access_key = "";
+
 	public function getId(): ?int
 	{
 		return $this->id;
@@ -95,6 +101,27 @@ class ServiceStatus
 	public function setLowTasks(int $low_tasks): static
 	{
 		$this->low_tasks = $low_tasks;
+
+		return $this;
+	}
+
+	public function getUrl(): ?string
+	{
+		return $this->url;
+	}
+	public function setUrl(string $url): static
+	{
+		$this->url = $url;
+
+		return $this;
+	}
+	public function getKey(): ?string
+	{
+		return $this->access_key;
+	}
+	public function setKey(string $key): static
+	{
+		$this->access_key = $key;
 
 		return $this;
 	}

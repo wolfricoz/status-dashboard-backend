@@ -27,10 +27,12 @@ final class ApiController extends AbstractController
 		$repository = $entityManager->getRepository(ServiceStatus::class);
 		$serviceStatus = $repository->findByName($service);
 		if ($serviceStatus == null) {
-			$serviceStatus = new ServiceStatus();
-			$serviceStatus->setService($service);
-			$entityManager->persist($serviceStatus);
-			$entityManager->flush();
+			return $this->json([
+				'status' => ServiceStatusType::UNKNOWN,
+				'high' => 0,
+				'medium' => 0,
+				'low' => 0,
+			]);
 		}
 
 		return $this->json([

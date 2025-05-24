@@ -9,4 +9,6 @@ enum ServiceStatusType: string
 	case WARNING = 'WARNING';
 	case ERROR = 'ERROR';
 	case UNKNOWN = 'UNKNOWN';
+
+
 }
