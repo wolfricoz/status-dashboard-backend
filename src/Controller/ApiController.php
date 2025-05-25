@@ -21,7 +21,7 @@ final class ApiController extends AbstractController
 //        ]);
 //    }
 
-	#[Route('/api/{service}', name: 'app_api', methods: ['POST', 'OPTIONS'])]
+	#[Route('/status/{service}', name: 'app_api', methods: ['POST', 'OPTIONS'])]
 	public function index(EntityManagerInterface $entityManager, string $service): JsonResponse
 	{
 		$repository = $entityManager->getRepository(ServiceStatus::class);
