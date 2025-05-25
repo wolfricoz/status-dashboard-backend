@@ -16,8 +16,8 @@ use function Symfony\Component\DependencyInjection\Loader\Configurator\env;
 
 class BaseApi
 {
-	protected string $url;
-	protected string $key;
+	protected string|null $url = null;
+	protected string|null $key = null;
 	protected HttpClientInterface $client;
 
 
@@ -53,7 +53,7 @@ class BaseApi
 
 	public function send_request($path, $method = 'GET', $data = []): array
 	{
-		if (!$this->client) {
+		if (!$this->url || !$this->key) {
 			return [
 					'status' => 'error',
 					'message' => 'Service client not available due to missing URL or key or service doesn\'t exist.',
