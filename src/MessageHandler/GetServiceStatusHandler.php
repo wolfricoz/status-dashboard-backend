@@ -42,7 +42,6 @@ final class GetServiceStatusHandler
 			$this->logger->info('Checking service: ' . $service->getService());
 			echo "Checking service: " . $service->getService() . "\n";
 			$service_api = new BaseApi($this->entityManager, $this->logger, $service->getService());
-			$this->logger->info('created base api');
 
 			$result = $service_api->send_request('/ping', 'POST');
 			switch($result['status']) {
@@ -59,18 +58,16 @@ final class GetServiceStatusHandler
 					$service->setStatus(ServiceStatusType::UNKNOWN);
 					break;
 			}
-			$this->logger->info('Status Retrieved');
 
-			if (isset($result['high'])) {
-				$service->setHighTasks($result['high']);
+			if (isset($result['high_priority_queue'])) {
+				$service->setHighTasks($result['high_priority_queue']);
 			}
-			if (isset($result['medium'])) {
-				$service->setMediumTasks($result['medium']);
+			if (isset($result['normal_priority_queue'])) {
+				$service->setMediumTasks($result['normal_priority_queue']);
 			}
-			if (isset($result['low'])) {
-				$service->setLowTasks($result['low']);
+			if (isset($result['low_priority_queue'])) {
+				$service->setLowTasks($result['low_priority_queue']);
 			}
-			$this->logger->info('Tasks Retrieved');
 			$this->entityManager->persist($service);
 			$this->entityManager->flush();
 			$this->logger->info('Service status updated: ' . $service->getService());

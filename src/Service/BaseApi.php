@@ -48,7 +48,7 @@ class BaseApi
 
 	public function urlBuilder($path)
 	{
-		$this->logger->info("Building url: {$this->url} . {$path}");
+		$this->logger->info("Building url: {$this->url}{$path}");
 		return $this->url . $path;
 	}
 
