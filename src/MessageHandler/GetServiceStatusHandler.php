@@ -4,6 +4,7 @@ namespace App\MessageHandler;
 
 use App\Entity\ServiceStatus;
 use App\Enum\ServiceStatusType;
+use App\Helpers\DiscordMessenger;
 use App\Message\GetServiceStatus;
 use App\Service\BaseApi;
 use Doctrine\ORM\EntityManagerInterface;
@@ -44,8 +45,30 @@ final class GetServiceStatusHandler
 			$service_api = new BaseApi($this->entityManager, $this->logger, $service->getService());
 
 			$result = $service_api->send_request('/ping', 'POST');
+			if ($result['status'] === 'alive') {
+				$result['status'] = 'ok'; // Normalize status to 'ok'
+			}
+
+			if (strtolower($service->getStatus()->value) !== strtolower($result['status'])){
+				$discordMessenger = new DiscordMessenger();
+				$colors = [
+						'ok' => '#00c950',
+						'offline' => '#c10007',
+						'error' => '#c10007',
+						'unknown' => '#a1a1a1',
+				];
+
+				$discordMessenger->sendNotification(
+					'Service Status Alert',
+					'The service ' . $service->getService() . ' has changed status from ' . strtolower($service->getStatus()
+							->value) . ' to ' .
+					$result['status'] . '.',
+					color:$colors[$result['status']] ?? '#000000',
+				);
+			}
+
 			switch($result['status']) {
-				case 'alive':
+				case 'ok':
 					$service->setStatus(ServiceStatusType::OK);
 					break;
 				case 'offline':
