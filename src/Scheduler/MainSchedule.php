@@ -21,7 +21,7 @@ final class MainSchedule implements ScheduleProviderInterface
     {
         return (new Schedule())
             ->add(
-								RecurringMessage::every('1 minute', new GetServiceStatus("ServiceStatus"))
+		            RecurringMessage::cron('* * * * *', new GetServiceStatus("ServiceStatus"))
             )
             ->stateful($this->cache)
         ;

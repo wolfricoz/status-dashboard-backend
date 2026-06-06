@@ -35,6 +35,9 @@ class ServiceStatus
 	#[ORM\Column]
 	private ?string $access_key = "";
 
+	#[ORM\Column]
+	private ?int $attempts = 0;
+
 	public function getId(): ?int
 	{
 		return $this->id;
@@ -124,5 +127,13 @@ class ServiceStatus
 		$this->access_key = $key;
 
 		return $this;
+	}
+
+	public function getAttempts() {
+		return $this->attempts;
+	}
+
+	public function setAttempts(int $param) {
+		$this->attempts = $param;
 	}
 }

@@ -9,6 +9,7 @@
     "ext-iconv": "*",
     "doctrine/doctrine-migrations-bundle": "^3.4",
     "doctrine/orm": "^3.3",
+    "dragonmantank/cron-expression": "^3.6",
     "nelmio/cors-bundle": "^2.5",
     "symfony/console": "7.2.*",
     "symfony/dotenv": "7.2.*",
