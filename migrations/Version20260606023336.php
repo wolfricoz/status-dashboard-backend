@@ -21,7 +21,7 @@ final class Version20260606023336 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql(<<<'SQL'
-            ALTER TABLE service_status ADD attempts INT NOT NULL
+            ALTER TABLE service_status ADD attempts INT NOT NULL default 0
         SQL);
     }
 

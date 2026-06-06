@@ -44,9 +44,7 @@ final class GetServiceStatusHandler
 				$result['status'] = 'ok';
 			}
 
-			// UPDATED: Tracking attempts using the Entity methods directly
 			if ($result['status'] !== 'ok') {
-				// Assumes you have standard getter/setter or custom increment methods on the entity
 				$currentAttempts = $service->getAttempts() ?? 0;
 				$service->setAttempts($currentAttempts + 1);
 			} else {
@@ -56,7 +54,6 @@ final class GetServiceStatusHandler
 			// If the service status has changed, send a Discord notification
 			if (strtolower($service->getStatus()->value) !== strtolower($result['status'])) {
 
-				// FIXED: Changed 'return' to 'continue' and reading attempts from the Entity
 				if ($result['status'] !== 'ok' && $service->getAttempts() < 3){
 					continue;
 				}
